@@ -2,6 +2,14 @@ import numpy as np
 
 
 def univariate_loss(x: np.ndarray, y: np.ndarray, theta: np.ndarray) -> float:
+    b = theta[0]
+    w = theta[1]
+    
+    for i in range(len(x)):
+        newX = b + w*x[i]
+        newArray = np.subtract(newX,y)
+        newArray[i]**2
+
     """
     :param x: 1D array that represents the feature vector
     :param y: 1D array that represents the target vector
@@ -22,8 +30,18 @@ def fit_univariate_lin_model(x: np.ndarray, y: np.ndarray) -> np.ndarray:
     N = x.size
     assert N > 1, "There must be at least 2 points given!"
     # TODO: Implement the expressions you have derived in the pen & paper exercise (Task 1.1.1)
-    w = None
-    b = None
+    xBar= np.average(x)
+    yBar = np.average(y)
+    a = xBar ** 2
+    bx = xBar * yBar
+    c = 0
+    d = 0
+    for i in range(len(x)):
+       c = x **2
+       d = x*y
+
+    w = (-bx + d)/(-a+c)
+    b = -w*xBar + yBar
     return np.array([b, w])
 
 
@@ -33,9 +51,12 @@ def calculate_pearson_correlation(x: np.ndarray, y: np.ndarray) -> float:
     :param y: 1D array that contains the target of each subject
     :return: a scalar that represents the Pearson correlation coefficient between x and y
     """
-    # TODO: Implement Pearson correlation coefficient, as shown in Equation 3 (Task 1.1.2).
-    pearson_r = None
-    return pearson_r
+    xBar= np.average(x)
+    yBar = np.average(y)
+    for i in range(len(x)):
+        xDiff = (x[i]-xBar)
+        yDiff = (y[i]-yBar)
+        (xDiff * yDiff)/(((xDiff)**2)**(1/2) * ((yDiff)**2)**(1/2))
 
 
 def compute_design_matrix(data: np.ndarray) -> np.ndarray:

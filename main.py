@@ -160,10 +160,11 @@ def task_3(initial_plot=True):
 
 def main():
     np.random.seed(46)
+    # print("test")
 
     task_1(use_linalg_formulation=False)
-    task_2()
-    task_3(initial_plot=True)
+    # task_2()
+    # task_3(initial_plot=True)
 
 
 if __name__ == '__main__':

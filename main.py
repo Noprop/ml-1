@@ -31,22 +31,39 @@ def task_1(use_linalg_formulation=False):
     smartwatch_data = np.load('./data/smartwatch_data.npy')
     # print(smartwatch_data.shape)
     # print(smartwatch_data[:, 1])
-
+    
+    #poor corr
     hours_sleep = smartwatch_data[:, 0]
     hours_work = smartwatch_data[:, 1]
     w, b = fit_univariate_lin_model(hours_sleep, hours_work)
     plot_scatterplot_and_line(hours_sleep, hours_work, (b, w), "Hours Slept", "Hours Worked", "Hours Slept vs Worked")
-
+    #good corr
     average_pulse = smartwatch_data[:, 2]
     max_pulse = smartwatch_data[:, 3]
     w, b = fit_univariate_lin_model(average_pulse, max_pulse)
     plot_scatterplot_and_line(average_pulse, max_pulse, (b, w), "Average Pulse", "Max Pulse", "Average vs Max Pulse")
-
+    #good corr
     exercise_duration = smartwatch_data[:, 4]
     fitness_level = smartwatch_data[:, 6]
     w, b = fit_univariate_lin_model(exercise_duration, fitness_level)
-    plot_scatterplot_and_line(exercise_duration, fitness_level, (b, w), "Exercise Duration", "Fitness Level", "Exercise Duration vs Fitness Level")
+    plot_scatterplot_and_line(exercise_duration, fitness_level, (b, w), "Exercise Duration",
+     "Fitness Level", "Exercise Duration vs Fitness Level")
+    
+    fitness_level= smartwatch_data[:, 6]
+    calories = smartwatch_data[:, 7]
+    w, b = fit_univariate_lin_model(fitness_level, calories)
+    plot_scatterplot_and_line(fitness_level, calories, (b, w), "Fitness Level", "Calories Burned", "Fitness Level vs Calories Burned")
 
+    hours_sleep = smartwatch_data[:, 0]
+    calories = smartwatch_data[:, 7]
+    w, b = fit_univariate_lin_model(hours_sleep, calories)
+    plot_scatterplot_and_line(hours_sleep, calories, (b, w), "Hours of Sleep", "Calories Burned", "Hours of Sleep vs Calories Burned")
+
+    hours_work = smartwatch_data[:, 1]
+    max_pulse = smartwatch_data[:, 3]
+    w, b = fit_univariate_lin_model(hours_work, max_pulse)
+    plot_scatterplot_and_line(hours_work,max_pulse, (b, w), "Hours of Work","Max Pulse", "Hours of Work vs Max Pulse")
+    print(w,b)
     # TODO: Implement Task 1.1.2: Find 3 pairs of features that have a linear relationship.
     # For each pair, fit a univariate linear regression model: If ``use_linalg_formulation`` is False,
     # call `fit_univariate_lin_model`, otherwise use the linalg formulation in `fit_multiple_lin_model` (Task 1.2.2).

@@ -50,7 +50,13 @@ def plot_scatterplot_and_line(x: np.ndarray,
     """
     # TODO: Implement the plot for the univariate linear regression (Task 1.1.2).
     # You should plot both a scatter plot of the data points and the line that you have computed.
-    pass
+    plt.scatter(x, y)
+    x = np.linspace(x.min(), x.max(), 2)
+    y = theta[0] * x + theta[1]
+    plt.plot(x, y)
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.title(title)
 
     plt.savefig(f'plots/{figname}.pdf')
     plt.show()

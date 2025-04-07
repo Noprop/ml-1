@@ -37,11 +37,16 @@ def fit_univariate_lin_model(x: np.ndarray, y: np.ndarray) -> np.ndarray:
     c = 0
     d = 0
     for i in range(len(x)):
-       c = x **2
-       d = x*y
+       c += x[i]**2
+       d += x[i]*y[i]
 
     w = (-bx + d)/(-a+c)
     b = -w*xBar + yBar
+
+    res = 0
+    for i in range(len(x)):
+      res += (b + w * x[i] - y[i])**2
+
     return np.array([b, w])
 
 

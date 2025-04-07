@@ -28,7 +28,24 @@ def task_1(use_linalg_formulation=False):
 
     # After loading the data, you can for example access it like this: 
     # `smartwatch_data[:, column_to_id['hours_sleep']]`
-    smartwatch_data = np.load('data/smartwatch_data.npy')
+    smartwatch_data = np.load('./data/smartwatch_data.npy')
+    # print(smartwatch_data.shape)
+    # print(smartwatch_data[:, 1])
+
+    hours_sleep = smartwatch_data[:, 0]
+    hours_work = smartwatch_data[:, 1]
+    w, b = fit_univariate_lin_model(hours_sleep, hours_work)
+    plot_scatterplot_and_line(hours_sleep, hours_work, (b, w), "Hours Slept", "Hours Worked", "Hours Slept vs Worked")
+
+    average_pulse = smartwatch_data[:, 2]
+    max_pulse = smartwatch_data[:, 3]
+    w, b = fit_univariate_lin_model(average_pulse, max_pulse)
+    plot_scatterplot_and_line(average_pulse, max_pulse, (b, w), "Average Pulse", "Max Pulse", "Average vs Max Pulse")
+
+    exercise_duration = smartwatch_data[:, 4]
+    fitness_level = smartwatch_data[:, 6]
+    w, b = fit_univariate_lin_model(exercise_duration, fitness_level)
+    plot_scatterplot_and_line(exercise_duration, fitness_level, (b, w), "Exercise Duration", "Fitness Level", "Exercise Duration vs Fitness Level")
 
     # TODO: Implement Task 1.1.2: Find 3 pairs of features that have a linear relationship.
     # For each pair, fit a univariate linear regression model: If ``use_linalg_formulation`` is False,
@@ -36,7 +53,32 @@ def task_1(use_linalg_formulation=False):
     # For each pair, also calculate and report the Pearson correlation coefficient, the theta vector you found, 
     # the MSE, and plot the data points together with the linear function.
     # Repeat the process for 3 pairs of features that do not have a meaningful linear relationship.
-    pass
+    # print(fit_univariate_lin_model(np.array([1, 3, 5]), np.array([2, 2, 2])))
+
+    # TEST
+    # Known slope and intercept
+    # w_true = 2.0
+    # b_true = -1.0
+
+    # # Generate some data
+    # np.random.seed(42)
+    # N = 100
+    # x = np.random.randn(N)
+    # print(x)
+    # noise = 0.1 * np.random.randn(N)  # small noise
+    # y = b_true + w_true * x + noise
+
+    # # Fit using your function
+    # theta_hat = fit_univariate_lin_model(x, y)
+    # b_hat, w_hat = theta_hat[0], theta_hat[1]
+
+    # print(f"Estimated intercept: {b_hat}")
+    # print(f"Estimated slope: {w_hat}")
+    # print(f"True intercept: {b_true}")
+    # print(f"True slope: {w_true}")
+
+    # plot_scatterplot_and_line(x, y, (w_hat, b_hat))
+
 
 
     # TODO: Implement Task 1.2.3: Multiple linear regression

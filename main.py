@@ -32,38 +32,71 @@ def task_1(use_linalg_formulation=False):
     # print(smartwatch_data.shape)
     # print(smartwatch_data[:, 1])
     
-    #poor corr
-    hours_sleep = smartwatch_data[:, 0]
-    hours_work = smartwatch_data[:, 1]
-    w, b = fit_univariate_lin_model(hours_sleep, hours_work)
-    plot_scatterplot_and_line(hours_sleep, hours_work, (b, w), "Hours Slept", "Hours Worked", "Hours Slept vs Worked")
     #good corr
     average_pulse = smartwatch_data[:, 2]
     max_pulse = smartwatch_data[:, 3]
     w, b = fit_univariate_lin_model(average_pulse, max_pulse)
     plot_scatterplot_and_line(average_pulse, max_pulse, (b, w), "Average Pulse", "Max Pulse", "Average vs Max Pulse")
+    pcc = calculate_pearson_correlation(average_pulse, max_pulse)
+    theta = fit_univariate_lin_model (average_pulse, max_pulse) 
+    mse = univariate_loss(average_pulse, max_pulse,(b,w))
+    print(pcc,theta,mse)
+
     #good corr
     exercise_duration = smartwatch_data[:, 4]
     fitness_level = smartwatch_data[:, 6]
     w, b = fit_univariate_lin_model(exercise_duration, fitness_level)
     plot_scatterplot_and_line(exercise_duration, fitness_level, (b, w), "Exercise Duration",
      "Fitness Level", "Exercise Duration vs Fitness Level")
-    
+    pcc = calculate_pearson_correlation(exercise_duration, fitness_level)
+    theta = fit_univariate_lin_model (exercise_duration, fitness_level) 
+    mse = univariate_loss(exercise_duration, fitness_level,(b,w))
+    print(pcc,theta,mse)
+
+    #good corr
     fitness_level= smartwatch_data[:, 6]
     calories = smartwatch_data[:, 7]
     w, b = fit_univariate_lin_model(fitness_level, calories)
     plot_scatterplot_and_line(fitness_level, calories, (b, w), "Fitness Level", "Calories Burned", "Fitness Level vs Calories Burned")
-
+    pcc = calculate_pearson_correlation(fitness_level, calories)
+    theta = fit_univariate_lin_model (fitness_level, calories)
+    mse = univariate_loss(fitness_level, calories,(b,w))
+    print(pcc,theta,mse)
+   
+    #poor corr
+    hours_sleep = smartwatch_data[:, 0]
+    hours_work = smartwatch_data[:, 1]
+    w, b = fit_univariate_lin_model(hours_sleep, hours_work)
+    plot_scatterplot_and_line(hours_sleep, hours_work, (b, w), "Hours Slept", "Hours Worked", "Hours Slept vs Worked")
+    pcc = calculate_pearson_correlation(hours_sleep, hours_work)
+    theta = fit_univariate_lin_model (hours_sleep, hours_work)
+    mse = univariate_loss(hours_sleep, hours_work,(b,w))
+    print(pcc,theta,mse)
+    #bad corr
     hours_sleep = smartwatch_data[:, 0]
     calories = smartwatch_data[:, 7]
     w, b = fit_univariate_lin_model(hours_sleep, calories)
     plot_scatterplot_and_line(hours_sleep, calories, (b, w), "Hours of Sleep", "Calories Burned", "Hours of Sleep vs Calories Burned")
-
+    pcc = calculate_pearson_correlation(hours_sleep, calories)
+    theta = fit_univariate_lin_model (hours_sleep, calories)
+    mse = univariate_loss(hours_sleep, calories,(b,w))
+    print(pcc,theta,mse)
+    #wack corr
     hours_work = smartwatch_data[:, 1]
     max_pulse = smartwatch_data[:, 3]
     w, b = fit_univariate_lin_model(hours_work, max_pulse)
     plot_scatterplot_and_line(hours_work,max_pulse, (b, w), "Hours of Work","Max Pulse", "Hours of Work vs Max Pulse")
-    print(w,b)
+    pcc = calculate_pearson_correlation(hours_sleep, calories)
+    theta = fit_univariate_lin_model (hours_sleep, calories)
+    mse = univariate_loss(hours_sleep, calories,(b,w))
+    print(pcc,theta,mse)
+    #print(w,b)
+    
+    #pcc = calculate_pearson_correlation(average_pulse, max_pulse)
+    #theta = 
+    #mse =  
+    #print(pcc,theta,mse)
+    
     # TODO: Implement Task 1.1.2: Find 3 pairs of features that have a linear relationship.
     # For each pair, fit a univariate linear regression model: If ``use_linalg_formulation`` is False,
     # call `fit_univariate_lin_model`, otherwise use the linalg formulation in `fit_multiple_lin_model` (Task 1.2.2).
@@ -179,6 +212,7 @@ def task_2():
 
         # TODO: Print theta vector (and also the bias term). Hint: Check the attributes of the classifier
         classifier_weights, classifier_bias = None, None
+
         print(f'Parameters: {classifier_weights}, {classifier_bias}')
 
 

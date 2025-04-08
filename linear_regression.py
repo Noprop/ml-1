@@ -4,11 +4,11 @@ import numpy as np
 def univariate_loss(x: np.ndarray, y: np.ndarray, theta: np.ndarray) -> float:
     b = theta[0]
     w = theta[1]
-    
+    mSq = 0
     for i in range(len(x)):
         newX = b + w*x[i]
         newArray = np.subtract(newX,y)
-        newArray[i]**2
+        mSq += newArray[i]**2
 
     """
     :param x: 1D array that represents the feature vector
@@ -17,7 +17,7 @@ def univariate_loss(x: np.ndarray, y: np.ndarray, theta: np.ndarray) -> float:
     :return: a scalar that represents the loss \mathcal{L}_U(theta)
     """
     # TODO: Implement the univariate loss \mathcal{L}_U(theta) (as specified in Equation 1)
-    return None
+    return mSq
 
 
 def fit_univariate_lin_model(x: np.ndarray, y: np.ndarray) -> np.ndarray:
@@ -58,10 +58,14 @@ def calculate_pearson_correlation(x: np.ndarray, y: np.ndarray) -> float:
     """
     xBar= np.average(x)
     yBar = np.average(y)
+    xDiff = 0
+    yDiff = 0
     for i in range(len(x)):
-        xDiff = (x[i]-xBar)
-        yDiff = (y[i]-yBar)
-        (xDiff * yDiff)/(((xDiff)**2)**(1/2) * ((yDiff)**2)**(1/2))
+        xDiff += (x[i]-xBar)
+        yDiff += (y[i]-yBar)
+        scalar = (xDiff * yDiff)/(((xDiff)**2)**(1/2) * ((yDiff)**2)**(1/2))
+
+    return scalar
 
 
 def compute_design_matrix(data: np.ndarray) -> np.ndarray:

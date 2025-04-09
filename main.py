@@ -222,10 +222,10 @@ def task_3(initial_plot=True):
     np.random.seed(46)
 
     # TODO: Choose a random starting point using samples from a standard normal distribution
-    x0 = None
-    y0 = None
+    x0 = np.random.rand()
+    y0 = np.random.rand()
     print(f'Starting point: {x0:.4f}, {y0:.4f}')
-
+    
     if initial_plot:
         # Plot the function to see how it looks like
         plot_3d_surface(rastrigin)
@@ -234,10 +234,18 @@ def task_3(initial_plot=True):
     # TODO: Check if gradient_rastrigin is correct at (x0, y0). 
     # To do this, print the true gradient and the numerical approximation.
     pass
+    
+    #TODO: NØT WORKING
+    print(gradient_rastrigin(x0,y0))
+    print(finite_difference_gradient_approx(rastrigin(x0,y0),x0,y0))
 
     # TODO: Call the function `gradient_descent` with a chosen configuration of hyperparameters,
     #  i.e., learning_rate, lr_decay, and num_iters. Try out lr_decay=1 as well as values for lr_decay that are < 1.
     x_list, y_list, f_list = None, None, None
+    learnRate = .75
+    decayRate = .02
+    num_it = 5
+    print(gradient_descent(rastrigin(x0,y0),gradient_rastrigin(x0,y0),x0,y0,learnRate,decayRate,num_it))
 
     # Print the point that is found after `num_iters` iterations
     print(f'Solution found: f({x_list[-1]:.4f}, {y_list[-1]:.4f})= {f_list[-1]:.4f}' )
@@ -248,16 +256,19 @@ def task_3(initial_plot=True):
                     x_list=x_list, y_list=y_list)
 
     # TODO: Create a plot f(x_t, y_t) over iterations t by calling `plot_function_over_iterations` with `f_list`
+    
+    
     pass
+
 
 
 def main():
     np.random.seed(46)
     # print("test")
 
-    task_1(use_linalg_formulation=False)
+    #task_1(use_linalg_formulation=False)
     # task_2()
-    # task_3(initial_plot=True)
+    task_3(initial_plot=True)
 
 
 if __name__ == '__main__':

@@ -52,7 +52,7 @@ def plot_scatterplot_and_line(x: np.ndarray,
     # You should plot both a scatter plot of the data points and the line that you have computed.
     plt.scatter(x, y)
     x = np.linspace(x.min(), x.max(), 2)
-    y = theta[0] * x + theta[1]
+    y = theta[1] * x + theta[0]
     plt.plot(x, y)
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)

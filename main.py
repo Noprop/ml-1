@@ -28,74 +28,7 @@ def task_1(use_linalg_formulation=False):
 
     # After loading the data, you can for example access it like this: 
     # `smartwatch_data[:, column_to_id['hours_sleep']]`
-    smartwatch_data = np.load('./data/smartwatch_data.npy')
-    # print(smartwatch_data.shape)
-    # print(smartwatch_data[:, 1])
-    
-    #good corr
-    average_pulse = smartwatch_data[:, 2]
-    max_pulse = smartwatch_data[:, 3]
-    w, b = fit_univariate_lin_model(average_pulse, max_pulse)
-    plot_scatterplot_and_line(average_pulse, max_pulse, (b, w), "Average Pulse", "Max Pulse", "Average vs Max Pulse")
-    pcc = calculate_pearson_correlation(average_pulse, max_pulse)
-    theta = fit_univariate_lin_model (average_pulse, max_pulse) 
-    mse = univariate_loss(average_pulse, max_pulse,(b,w))
-    print(pcc,theta,mse)
-
-    #good corr
-    exercise_duration = smartwatch_data[:, 4]
-    fitness_level = smartwatch_data[:, 6]
-    w, b = fit_univariate_lin_model(exercise_duration, fitness_level)
-    plot_scatterplot_and_line(exercise_duration, fitness_level, (b, w), "Exercise Duration",
-     "Fitness Level", "Exercise Duration vs Fitness Level")
-    pcc = calculate_pearson_correlation(exercise_duration, fitness_level)
-    theta = fit_univariate_lin_model (exercise_duration, fitness_level) 
-    mse = univariate_loss(exercise_duration, fitness_level,(b,w))
-    print(pcc,theta,mse)
-
-    #good corr
-    fitness_level= smartwatch_data[:, 6]
-    calories = smartwatch_data[:, 7]
-    w, b = fit_univariate_lin_model(fitness_level, calories)
-    plot_scatterplot_and_line(fitness_level, calories, (b, w), "Fitness Level", "Calories Burned", "Fitness Level vs Calories Burned")
-    pcc = calculate_pearson_correlation(fitness_level, calories)
-    theta = fit_univariate_lin_model (fitness_level, calories)
-    mse = univariate_loss(fitness_level, calories,(b,w))
-    print(pcc,theta,mse)
-   
-    #poor corr
-    hours_sleep = smartwatch_data[:, 0]
-    hours_work = smartwatch_data[:, 1]
-    w, b = fit_univariate_lin_model(hours_sleep, hours_work)
-    plot_scatterplot_and_line(hours_sleep, hours_work, (b, w), "Hours Slept", "Hours Worked", "Hours Slept vs Worked")
-    pcc = calculate_pearson_correlation(hours_sleep, hours_work)
-    theta = fit_univariate_lin_model (hours_sleep, hours_work)
-    mse = univariate_loss(hours_sleep, hours_work,(b,w))
-    print(pcc,theta,mse)
-    #bad corr
-    hours_sleep = smartwatch_data[:, 0]
-    calories = smartwatch_data[:, 7]
-    w, b = fit_univariate_lin_model(hours_sleep, calories)
-    plot_scatterplot_and_line(hours_sleep, calories, (b, w), "Hours of Sleep", "Calories Burned", "Hours of Sleep vs Calories Burned")
-    pcc = calculate_pearson_correlation(hours_sleep, calories)
-    theta = fit_univariate_lin_model (hours_sleep, calories)
-    mse = univariate_loss(hours_sleep, calories,(b,w))
-    print(pcc,theta,mse)
-    #wack corr
-    hours_work = smartwatch_data[:, 1]
-    max_pulse = smartwatch_data[:, 3]
-    w, b = fit_univariate_lin_model(hours_work, max_pulse)
-    plot_scatterplot_and_line(hours_work,max_pulse, (b, w), "Hours of Work","Max Pulse", "Hours of Work vs Max Pulse")
-    pcc = calculate_pearson_correlation(hours_sleep, calories)
-    theta = fit_univariate_lin_model (hours_sleep, calories)
-    mse = univariate_loss(hours_sleep, calories,(b,w))
-    print(pcc,theta,mse)
-    #print(w,b)
-    
-    #pcc = calculate_pearson_correlation(average_pulse, max_pulse)
-    #theta = 
-    #mse =  
-    #print(pcc,theta,mse)
+    smartwatch_data = np.load('./data/smartwatch_data.npy') 
     
     # TODO: Implement Task 1.1.2: Find 3 pairs of features that have a linear relationship.
     # For each pair, fit a univariate linear regression model: If ``use_linalg_formulation`` is False,
@@ -105,37 +38,99 @@ def task_1(use_linalg_formulation=False):
     # Repeat the process for 3 pairs of features that do not have a meaningful linear relationship.
     # print(fit_univariate_lin_model(np.array([1, 3, 5]), np.array([2, 2, 2])))
 
-    # TEST
-    # Known slope and intercept
-    # w_true = 2.0
-    # b_true = -1.0
+    # good corr #1
+    average_pulse = smartwatch_data[:, 2]
+    max_pulse = smartwatch_data[:, 3]
+    X = np.column_stack([np.ones(len(average_pulse)), average_pulse])
+    b, w = fit_univariate_lin_model(average_pulse, max_pulse) if not use_linalg_formulation else fit_multiple_lin_model(X, max_pulse)
+    plot_scatterplot_and_line(average_pulse, max_pulse, (b, w), "Average Pulse", "Max Pulse", "Average vs Max Pulse")
+    pcc = calculate_pearson_correlation(average_pulse, max_pulse)
+    theta = fit_univariate_lin_model (average_pulse, max_pulse) 
+    mse = univariate_loss(average_pulse, max_pulse,(b,w))
+    print("Good #1:")
+    print(f"PCC: {pcc:.2f}, b: {theta[0]:.2f}, w: {theta[1]:.2f}, mse: {mse:.2f}")
 
-    # # Generate some data
-    # np.random.seed(42)
-    # N = 100
-    # x = np.random.randn(N)
-    # print(x)
-    # noise = 0.1 * np.random.randn(N)  # small noise
-    # y = b_true + w_true * x + noise
+    # good corr #2
+    exercise_duration = smartwatch_data[:, 4]
+    fitness_level = smartwatch_data[:, 6]
+    X = np.column_stack([np.ones(len(exercise_duration)), exercise_duration])
+    b, w = fit_univariate_lin_model(exercise_duration, fitness_level) if not use_linalg_formulation else fit_multiple_lin_model(X, fitness_level)
+    plot_scatterplot_and_line(exercise_duration, fitness_level, (b, w), "Exercise Duration",
+     "Fitness Level", "Exercise Duration vs Fitness Level")
+    pcc = calculate_pearson_correlation(exercise_duration, fitness_level)
+    theta = fit_univariate_lin_model (exercise_duration, fitness_level) 
+    mse = univariate_loss(exercise_duration, fitness_level, (b,w))
+    print("Good #2:")
+    print(f"PCC: {pcc:.2f}, b: {theta[0]:.2f}, w: {theta[1]:.2f}, mse: {mse:.2f}")
 
-    # # Fit using your function
-    # theta_hat = fit_univariate_lin_model(x, y)
-    # b_hat, w_hat = theta_hat[0], theta_hat[1]
+    # good corr #3
+    fitness_level = smartwatch_data[:, 6]
+    calories = smartwatch_data[:, 7]
+    X = np.column_stack([np.ones(len(fitness_level)), fitness_level])
+    b, w = fit_univariate_lin_model(fitness_level, calories) if not use_linalg_formulation else fit_multiple_lin_model(X, calories)
+    plot_scatterplot_and_line(fitness_level, calories, (b, w), "Fitness Level", "Calories Burned", "Fitness Level vs Calories Burned")
+    pcc = calculate_pearson_correlation(fitness_level, calories)
+    theta = fit_univariate_lin_model (fitness_level, calories)
+    mse = univariate_loss(fitness_level, calories, (b, w))
+    print("Good #3:")
+    print(f"PCC: {pcc:.2f}, b: {theta[0]:.2f}, w: {theta[1]:.2f}, mse: {mse:.2f}")
+   
+    # poor corr #1
+    hours_sleep = smartwatch_data[:, 0]
+    hours_work = smartwatch_data[:, 1]
+    X = np.column_stack([np.ones(len(hours_sleep)), hours_sleep])
+    b, w = fit_univariate_lin_model(hours_sleep, hours_work) if not use_linalg_formulation else fit_multiple_lin_model(X, hours_work)
+    plot_scatterplot_and_line(hours_sleep, hours_work, (b, w), "Hours Slept", "Hours Worked", "Hours Slept vs Worked")
+    pcc = calculate_pearson_correlation(hours_sleep, hours_work)
+    theta = fit_univariate_lin_model (hours_sleep, hours_work)
+    mse = univariate_loss(hours_sleep, hours_work,(b,w))
+    print("Bad #1:")
+    print(f"PCC: {pcc:.2f}, b: {theta[0]:.2f}, w: {theta[1]:.2f}, mse: {mse:.2f}")
 
-    # print(f"Estimated intercept: {b_hat}")
-    # print(f"Estimated slope: {w_hat}")
-    # print(f"True intercept: {b_true}")
-    # print(f"True slope: {w_true}")
+    # bad corr #2
+    hours_sleep = smartwatch_data[:, 0]
+    calories = smartwatch_data[:, 7]
+    X = np.column_stack([np.ones(len(hours_sleep)), hours_sleep])
+    b, w = fit_univariate_lin_model(hours_sleep, calories) if not use_linalg_formulation else fit_multiple_lin_model(X, calories)
+    plot_scatterplot_and_line(hours_sleep, calories, (b, w), "Hours of Sleep", "Calories Burned", "Hours of Sleep vs Calories Burned")
+    pcc = calculate_pearson_correlation(hours_sleep, calories)
+    theta = fit_univariate_lin_model (hours_sleep, calories)
+    mse = univariate_loss(hours_sleep, calories, (b,w))
+    print("Bad #2:")
+    print(f"PCC: {pcc:.2f}, b: {theta[0]:.2f}, w: {theta[1]:.2f}, mse: {mse:.2f}")
 
-    # plot_scatterplot_and_line(x, y, (w_hat, b_hat))
-
-
+    # wack corr #3
+    hours_work = smartwatch_data[:, 1]
+    max_pulse = smartwatch_data[:, 3]
+    X = np.column_stack([np.ones(len(hours_work)), hours_work])
+    b, w = fit_univariate_lin_model(hours_work, max_pulse) if not use_linalg_formulation else fit_multiple_lin_model(X, max_pulse)
+    plot_scatterplot_and_line(hours_work, max_pulse, (b, w), "Hours of Work","Max Pulse", "Hours of Work vs Max Pulse")
+    pcc = calculate_pearson_correlation(hours_sleep, max_pulse)
+    theta = fit_univariate_lin_model (hours_sleep, max_pulse)
+    mse = univariate_loss(hours_sleep, max_pulse, (b, w))
+    print("Bad #3:")
+    print(f"PCC: {pcc:.2f}, b: {theta[0]:.2f}, w: {theta[1]:.2f}, mse: {mse:.2f}")
 
     # TODO: Implement Task 1.2.3: Multiple linear regression
     # Select two additional features, compute the design matrix, and fit the multiple linear regression model.
     # Report the MSE and the theta vector.
-    pass
 
+    average_pulse = smartwatch_data[:, 2]
+    exercise_duration = smartwatch_data[:, 6]
+    fitness_level = smartwatch_data[:, 4]
+    max_pulse = smartwatch_data[:, 3]
+    X = np.column_stack([np.ones(len(average_pulse)), average_pulse, exercise_duration, fitness_level])
+    theta = fit_multiple_lin_model(X, max_pulse)
+    print(f"b: {theta[0]:.2f} w1: {theta[1]:.2f} w2: {theta[2]:.2f} w3: {theta[3]:.2f}")
+    mse = multiple_loss(X, max_pulse, theta)
+    print(f"mse: {mse:.2f}")
+
+    # plot_scatterplot_and_line(average_pulse, max_pulse, (b, w), "Average Pulse", "Max Pulse", "Average vs Max Pulse")
+    # pcc = calculate_pearson_correlation(average_pulse, max_pulse)
+    # theta = fit_univariate_lin_model (average_pulse, max_pulse) 
+    # mse = univariate_loss(average_pulse, max_pulse,(b,w))
+    # print("Good #1:")
+    # print(f"PCC: {pcc:.2f}, b: {theta[0]:.2f}, w: {theta[1]:.2f}, mse: {mse:.2f}")
 
     # TODO: Implement Task 1.3.2: Polynomial regression
     # For the feature-target pair of choice, compute the polynomial design matrix with an appropriate degree K, 

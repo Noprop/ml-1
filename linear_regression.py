@@ -2,14 +2,6 @@ import numpy as np
 
 
 def univariate_loss(x: np.ndarray, y: np.ndarray, theta: np.ndarray) -> float:
-    b = theta[0]
-    w = theta[1]
-    mSq = 0
-    for i in range(len(x)):
-        newX = b + w*x[i]
-        newArray = np.subtract(newX,y)
-        mSq += newArray[i]**2
-
     """
     :param x: 1D array that represents the feature vector
     :param y: 1D array that represents the target vector
@@ -17,7 +9,11 @@ def univariate_loss(x: np.ndarray, y: np.ndarray, theta: np.ndarray) -> float:
     :return: a scalar that represents the loss \mathcal{L}_U(theta)
     """
     # TODO: Implement the univariate loss \mathcal{L}_U(theta) (as specified in Equation 1)
-    return mSq
+
+    b = theta[0]
+    w = theta[1]
+
+    return np.sum(((b + w*x) - y)**2)/x.size
 
 
 def fit_univariate_lin_model(x: np.ndarray, y: np.ndarray) -> np.ndarray:
@@ -26,27 +22,18 @@ def fit_univariate_lin_model(x: np.ndarray, y: np.ndarray) -> np.ndarray:
     :param y: 1D array that contains the target of each subject
     :return: the parameter vector theta^* that minimizes the loss \mathcal{L}_U(theta)
     """
-
     N = x.size
     assert N > 1, "There must be at least 2 points given!"
-    # TODO: Implement the expressions you have derived in the pen & paper exercise (Task 1.1.1)
-    xBar= np.average(x)
-    yBar = np.average(y)
-    a = xBar ** 2
-    bx = xBar * yBar
-    c = 0
-    d = 0
-    for i in range(len(x)):
-       c += x[i]**2
-       d += x[i]*y[i]
 
-    w = (-bx + d)/(-a+c)
-    b = -w*xBar + yBar
+    x_bar = np.mean(x)
+    y_bar = np.mean(y)
 
-    res = 0
-    for i in range(len(x)):
-      res += (b + w * x[i] - y[i])**2
-
+    num = np.sum(x * y) - y_bar * np.sum(x)
+    denom = np.sum(x**2) - x_bar * np.sum(x)
+    
+    w = num / denom
+    b = y_bar - w * x_bar
+    
     return np.array([b, w])
 
 
@@ -56,16 +43,13 @@ def calculate_pearson_correlation(x: np.ndarray, y: np.ndarray) -> float:
     :param y: 1D array that contains the target of each subject
     :return: a scalar that represents the Pearson correlation coefficient between x and y
     """
-    xBar= np.average(x)
-    yBar = np.average(y)
-    xDiff = 0
-    yDiff = 0
-    for i in range(len(x)):
-        xDiff += (x[i]-xBar)
-        yDiff += (y[i]-yBar)
-        scalar = (xDiff * yDiff)/(((xDiff)**2)**(1/2) * ((yDiff)**2)**(1/2))
+    x_bar = np.mean(x)
+    y_bar = np.mean(y)
 
-    return scalar
+    num = np.sum((x - x_bar) * (y - y_bar))
+    denom = np.sqrt(np.sum((x - x_bar)**2)) * np.sqrt(np.sum((y - y_bar)**2))
+
+    return num / denom
 
 
 def compute_design_matrix(data: np.ndarray) -> np.ndarray:
@@ -73,9 +57,9 @@ def compute_design_matrix(data: np.ndarray) -> np.ndarray:
     :param data: 2D array of shape (N, D) that represents the data matrix
     :return: 2D array that represents the design matrix. Think about the shape of the output.
     """
-
     # TODO: Implement the design matrix for multiple linear regression (Task 1.2.2)
-    design_matrix = None
+
+    design_matrix = np.insert(data, 0, 1, axis=1)
     return design_matrix
 
 
@@ -87,7 +71,8 @@ def multiple_loss(X: np.ndarray, y: np.ndarray, theta: np.ndarray) -> float:
     :return: a scalar that represents the loss \mathcal{L}_M(theta)
     """
     # TODO: Implement the multiple regression loss \mathcal{L}_M(theta) (as specified in Equation 5)
-    return None
+
+    return np.sum(((X @ theta) - y)**2)
 
 
 def fit_multiple_lin_model(X: np.ndarray, y: np.ndarray) -> np.ndarray:
@@ -100,7 +85,8 @@ def fit_multiple_lin_model(X: np.ndarray, y: np.ndarray) -> np.ndarray:
 
     # TODO: Implement the expressions you have derived in the pen & paper exercise (Task 1.2.1). 
     # Note: Use the pinv function.
-    theta = None
+
+    theta = pinv(X) @ y
     return theta
 
 

@@ -57,9 +57,9 @@ def compute_design_matrix(data: np.ndarray) -> np.ndarray:
     :param data: 2D array of shape (N, D) that represents the data matrix
     :return: 2D array that represents the design matrix. Think about the shape of the output.
     """
-
     # TODO: Implement the design matrix for multiple linear regression (Task 1.2.2)
-    design_matrix = None
+
+    design_matrix = np.insert(data, 0, 1, axis=1)
     return design_matrix
 
 
@@ -71,7 +71,8 @@ def multiple_loss(X: np.ndarray, y: np.ndarray, theta: np.ndarray) -> float:
     :return: a scalar that represents the loss \mathcal{L}_M(theta)
     """
     # TODO: Implement the multiple regression loss \mathcal{L}_M(theta) (as specified in Equation 5)
-    return None
+
+    return np.sum(((X @ theta) - y)**2)
 
 
 def fit_multiple_lin_model(X: np.ndarray, y: np.ndarray) -> np.ndarray:
@@ -84,7 +85,8 @@ def fit_multiple_lin_model(X: np.ndarray, y: np.ndarray) -> np.ndarray:
 
     # TODO: Implement the expressions you have derived in the pen & paper exercise (Task 1.2.1). 
     # Note: Use the pinv function.
-    theta = None
+
+    theta = pinv(X) @ y
     return theta
 
 

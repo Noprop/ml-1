@@ -248,11 +248,12 @@ def task_3(initial_plot=True):
     print(f'Global optimum: f(0, 0)= {rastrigin(0, 0):.4f}')
 
     # Here we plot the contour of the function with the path taken by the gradient descent algorithm
-    plot_2d_contour(rastrigin, starting_point=(x0, y0), global_min=(0, 0), 
-                    x_list=x_list, y_list=y_list)
+   #plot_2d_contour(rastrigin, starting_point=(x0, y0), global_min=(0, 0), 
+    #                x_list=x_list, y_list=y_list)
 
     # TODO: Create a plot f(x_t, y_t) over iterations t by calling `plot_function_over_iterations` with `f_list`
-    
+    print(f_list)
+    plot_function_over_iterations(f_list)
     
     pass
 

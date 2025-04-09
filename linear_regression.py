@@ -98,5 +98,5 @@ def compute_polynomial_design_matrix(x: np.ndarray, K: int) -> np.ndarray:
     """
 
     # TODO: Implement the polynomial design matrix (Task 1.3.2)
-    polynomial_design_matrix = None
+    polynomial_design_matrix = np.column_stack
     return polynomial_design_matrix

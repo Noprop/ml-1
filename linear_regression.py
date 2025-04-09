@@ -26,27 +26,18 @@ def fit_univariate_lin_model(x: np.ndarray, y: np.ndarray) -> np.ndarray:
     :param y: 1D array that contains the target of each subject
     :return: the parameter vector theta^* that minimizes the loss \mathcal{L}_U(theta)
     """
-
     N = x.size
     assert N > 1, "There must be at least 2 points given!"
-    # TODO: Implement the expressions you have derived in the pen & paper exercise (Task 1.1.1)
-    xBar= np.average(x)
-    yBar = np.average(y)
-    a = xBar ** 2
-    bx = xBar * yBar
-    c = 0
-    d = 0
-    for i in range(len(x)):
-       c += x[i]**2
-       d += x[i]*y[i]
 
-    w = (-bx + d)/(-a+c)
-    b = -w*xBar + yBar
+    x_bar = np.mean(x)
+    y_bar = np.mean(y)
 
-    res = 0
-    for i in range(len(x)):
-      res += (b + w * x[i] - y[i])**2
-
+    numerator = np.sum(x * y) - y_bar * np.sum(x)
+    denominator = np.sum(x**2) - x_bar * np.sum(x)
+    
+    w = numerator / denominator
+    b = y_bar - w * x_bar
+    
     return np.array([b, w])
 
 

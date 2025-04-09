@@ -12,13 +12,8 @@ def univariate_loss(x: np.ndarray, y: np.ndarray, theta: np.ndarray) -> float:
 
     b = theta[0]
     w = theta[1]
-    mSq = 0
-    for i in range(len(x)):
-        newX = b + w*x[i]
-        newArray = np.subtract(newX,y)
-        mSq += newArray[i]**2
 
-    return mSq
+    return np.sum(((b + w*x) - y)**2)/x.size
 
 
 def fit_univariate_lin_model(x: np.ndarray, y: np.ndarray) -> np.ndarray:
@@ -33,10 +28,10 @@ def fit_univariate_lin_model(x: np.ndarray, y: np.ndarray) -> np.ndarray:
     x_bar = np.mean(x)
     y_bar = np.mean(y)
 
-    numerator = np.sum(x * y) - y_bar * np.sum(x)
-    denominator = np.sum(x**2) - x_bar * np.sum(x)
+    num = np.sum(x * y) - y_bar * np.sum(x)
+    denom = np.sum(x**2) - x_bar * np.sum(x)
     
-    w = numerator / denominator
+    w = num / denom
     b = y_bar - w * x_bar
     
     return np.array([b, w])
@@ -48,16 +43,13 @@ def calculate_pearson_correlation(x: np.ndarray, y: np.ndarray) -> float:
     :param y: 1D array that contains the target of each subject
     :return: a scalar that represents the Pearson correlation coefficient between x and y
     """
-    xBar= np.average(x)
-    yBar = np.average(y)
-    xDiff = 0
-    yDiff = 0
-    for i in range(len(x)):
-        xDiff += (x[i]-xBar)
-        yDiff += (y[i]-yBar)
-        scalar = (xDiff * yDiff)/(((xDiff)**2)**(1/2) * ((yDiff)**2)**(1/2))
+    x_bar = np.mean(x)
+    y_bar = np.mean(y)
 
-    return scalar
+    num = np.sum((x - x_bar) * (y - y_bar))
+    denom = np.sqrt(np.sum((x - x_bar)**2)) * np.sqrt(np.sum((y - y_bar)**2))
+
+    return num / denom
 
 
 def compute_design_matrix(data: np.ndarray) -> np.ndarray:

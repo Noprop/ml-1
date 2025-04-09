@@ -46,7 +46,8 @@ def task_1(use_linalg_formulation=False):
     pcc = calculate_pearson_correlation(average_pulse, max_pulse)
     theta = fit_univariate_lin_model (average_pulse, max_pulse) 
     mse = univariate_loss(average_pulse, max_pulse,(b,w))
-    print(pcc,theta,mse)
+    print("Good #1:")
+    print(f"PCC: {pcc:.2f}, b: {theta[0]:.2f}, w: {theta[1]:.2f}, mse: {mse:.2f}")
 
     # good corr #2
     exercise_duration = smartwatch_data[:, 4]
@@ -57,7 +58,8 @@ def task_1(use_linalg_formulation=False):
     pcc = calculate_pearson_correlation(exercise_duration, fitness_level)
     theta = fit_univariate_lin_model (exercise_duration, fitness_level) 
     mse = univariate_loss(exercise_duration, fitness_level,(b,w))
-    print(pcc,theta,mse)
+    print("Good #2:")
+    print(f"PCC: {pcc:.2f}, b: {theta[0]:.2f}, w: {theta[1]:.2f}, mse: {mse:.2f}")
 
     # good corr #3
     fitness_level= smartwatch_data[:, 6]
@@ -67,7 +69,8 @@ def task_1(use_linalg_formulation=False):
     pcc = calculate_pearson_correlation(fitness_level, calories)
     theta = fit_univariate_lin_model (fitness_level, calories)
     mse = univariate_loss(fitness_level, calories,(b,w))
-    print(pcc,theta,mse)
+    print("Good #3:")
+    print(f"PCC: {pcc:.2f}, b: {theta[0]:.2f}, w: {theta[1]:.2f}, mse: {mse:.2f}")
    
     # poor corr #1
     hours_sleep = smartwatch_data[:, 0]
@@ -77,7 +80,8 @@ def task_1(use_linalg_formulation=False):
     pcc = calculate_pearson_correlation(hours_sleep, hours_work)
     theta = fit_univariate_lin_model (hours_sleep, hours_work)
     mse = univariate_loss(hours_sleep, hours_work,(b,w))
-    print(pcc,theta,mse)
+    print("Bad #1:")
+    print(f"PCC: {pcc:.2f}, b: {theta[0]:.2f}, w: {theta[1]:.2f}, mse: {mse:.2f}")
 
     # bad corr #2
     hours_sleep = smartwatch_data[:, 0]
@@ -87,7 +91,8 @@ def task_1(use_linalg_formulation=False):
     pcc = calculate_pearson_correlation(hours_sleep, calories)
     theta = fit_univariate_lin_model (hours_sleep, calories)
     mse = univariate_loss(hours_sleep, calories,(b,w))
-    print(pcc,theta,mse)
+    print("Bad #2:")
+    print(f"PCC: {pcc:.2f}, b: {theta[0]:.2f}, w: {theta[1]:.2f}, mse: {mse:.2f}")
 
     # wack corr #3
     hours_work = smartwatch_data[:, 1]
@@ -97,7 +102,8 @@ def task_1(use_linalg_formulation=False):
     pcc = calculate_pearson_correlation(hours_sleep, calories)
     theta = fit_univariate_lin_model (hours_sleep, calories)
     mse = univariate_loss(hours_sleep, calories,(b,w))
-    print(pcc,theta,mse)
+    print("Bad #3:")
+    print(f"PCC: {pcc:.2f}, b: {theta[0]:.2f}, w: {theta[1]:.2f}, mse: {mse:.2f}")
 
     # TODO: Implement Task 1.2.3: Multiple linear regression
     # Select two additional features, compute the design matrix, and fit the multiple linear regression model.

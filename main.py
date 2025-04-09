@@ -217,8 +217,8 @@ def task_3(initial_plot=True):
     np.random.seed(46)
 
     # TODO: Choose a random starting point using samples from a standard normal distribution
-    x0 = np.random.rand()
-    y0 = np.random.rand()
+    x0 = np.random.randn()
+    y0 = np.random.randn()
     print(f'Starting point: {x0:.4f}, {y0:.4f}')
     
     if initial_plot:
@@ -230,17 +230,18 @@ def task_3(initial_plot=True):
     # To do this, print the true gradient and the numerical approximation.
     pass
     
-    #TODO: NØT WORKING
-    print(gradient_rastrigin(x0,y0))
-    print(finite_difference_gradient_approx(rastrigin(x0,y0),x0,y0))
+    analytical_grad = gradient_rastrigin(x0, y0)
+    numerical_grad = finite_difference_gradient_approx(rastrigin, x0, y0)
+    print(f"Analytical gradient at starting point: {analytical_grad}")
+    print(f"Numerical gradient at starting point: {numerical_grad}")
 
     # TODO: Call the function `gradient_descent` with a chosen configuration of hyperparameters,
     #  i.e., learning_rate, lr_decay, and num_iters. Try out lr_decay=1 as well as values for lr_decay that are < 1.
     x_list, y_list, f_list = None, None, None
-    learnRate = .75
-    decayRate = .02
-    num_it = 5
-    print(gradient_descent(rastrigin(x0,y0),gradient_rastrigin(x0,y0),x0,y0,learnRate,decayRate,num_it))
+    lr = 0.02
+    lr_decay = 0.99
+    num_iters = 200
+    x_list, y_list, f_list = gradient_descent(rastrigin, gradient_rastrigin, x0, y0, lr, lr_decay, num_iters)
 
     # Print the point that is found after `num_iters` iterations
     print(f'Solution found: f({x_list[-1]:.4f}, {y_list[-1]:.4f})= {f_list[-1]:.4f}' )
@@ -254,7 +255,6 @@ def task_3(initial_plot=True):
     
     
     pass
-
 
 
 def main():

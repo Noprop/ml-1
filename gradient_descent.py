@@ -28,26 +28,22 @@ def gradient_descent(f: Callable[[np.ndarray, np.ndarray], np.ndarray],
              The first element of the lists represents the initial point (and the function value at the initial point).
              The last element of the lists represents the final point (and the function value at the final point).
     """
-    i = 0
-    while(i <num_iters):
-        newLR = learning_rate-lr_decay*i
-
-        xT= x0-newLR*df(x0,y0)
-        yT= y0-newLR*df(x0,y0)
-        
-        f_list = np.zeros(num_iters+1)
-        x_list = np.zeros(num_iters+1)
-        y_list = np.zeros(num_iters+1)
-        
-        f_list.add(f)
-        x_list.add(xT)
-        y_list.add(yT)
-        i= i + 1 
-        
-
-
     # TODO: Implement the gradient descent algorithm with a decaying learning rate
-    pass
+    lr = learning_rate
+    x_list = [x0]
+    y_list = [y0]
+    f_list = [f(x0, y0)]
+
+    for i in range(num_iters):
+      grad_x, grad_y = df(x0, y0)
+      x0 = x0 - lr * grad_x
+      y0 = y0 - lr * grad_y
+
+      x_list.append(x0)
+      y_list.append(y0)
+      f_list.append(f(x0, y0))
+
+      lr *= lr_decay
 
     return x_list, y_list, f_list
 
@@ -60,8 +56,7 @@ def rastrigin(x: np.ndarray, y: np.ndarray) -> np.ndarray:
     :return: Rastrigin function value
     """
     # TODO: Implement the Rastrigin function (as specified in the Assignment 1 sheet)
-    rast = ((20 + x**2 + y**2) - 10*(np.cos(2*x*np.pi)+np.cos(2*np.pi)))
-    return rast
+    return 20 + x**2 + y**2 - 10*(np.cos(2*np.pi*x) + np.cos(2*np.pi*y))
 
 
 def gradient_rastrigin(x: np.ndarray, y: np.ndarray) -> np.ndarray:
@@ -72,8 +67,8 @@ def gradient_rastrigin(x: np.ndarray, y: np.ndarray) -> np.ndarray:
     :return: Gradient of Rastrigin function
     """
     # TODO: Implement partial derivatives of the Rastrigin function w.r.t. x and y
-    df_dx = 2*x - 10*(-1*np.sin(2*x*np.pi)*(2*x*np.pi))
-    df_dy = 2*y - 10*(-1*np.sin(2*y*np.pi)*(2*y*np.pi))
+    df_dx = 2*x + 10*2*np.pi*np.sin(2*np.pi*x)
+    df_dy = 2*y + 10*2*np.pi*np.sin(2*np.pi*y)
 
     gradient = np.array([df_dx, df_dy])
     return gradient
@@ -94,9 +89,7 @@ def finite_difference_gradient_approx(f: Callable[[np.ndarray, np.ndarray], np.n
     
     # TODO: Implement numerical approximation to the partial derivatives of 
     # the Rastrigin function w.r.t. x and y
-    df_dx = (f(x+h,y)-f(x,y))/h
-    df_dy = (f[x,y+h]-f(x,y))/h
+    df_dx = (f(x+h, y) - f(x, y))/h
+    df_dy = (f(x, y+h) - f(x, y))/h
 
-
-    approx_grad = np.array([df_dx, df_dy])
-    return approx_grad
+    return np.array([df_dx, df_dy])

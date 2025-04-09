@@ -2,6 +2,14 @@ import numpy as np
 
 
 def univariate_loss(x: np.ndarray, y: np.ndarray, theta: np.ndarray) -> float:
+    """
+    :param x: 1D array that represents the feature vector
+    :param y: 1D array that represents the target vector
+    :param theta: 1D array that represents the parameter vector theta = (b, w)
+    :return: a scalar that represents the loss \mathcal{L}_U(theta)
+    """
+    # TODO: Implement the univariate loss \mathcal{L}_U(theta) (as specified in Equation 1)
+
     b = theta[0]
     w = theta[1]
     mSq = 0
@@ -10,13 +18,6 @@ def univariate_loss(x: np.ndarray, y: np.ndarray, theta: np.ndarray) -> float:
         newArray = np.subtract(newX,y)
         mSq += newArray[i]**2
 
-    """
-    :param x: 1D array that represents the feature vector
-    :param y: 1D array that represents the target vector
-    :param theta: 1D array that represents the parameter vector theta = (b, w)
-    :return: a scalar that represents the loss \mathcal{L}_U(theta)
-    """
-    # TODO: Implement the univariate loss \mathcal{L}_U(theta) (as specified in Equation 1)
     return mSq
 
 

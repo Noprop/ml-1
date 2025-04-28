@@ -22,7 +22,16 @@ def reduce_dimension(X_train: np.ndarray, n_components: int) -> Tuple[np.ndarray
     #       Transform X_train using the PCA object.
     #       Print the explained variance ratio of the PCA object.
     #       Return both the transformed data and the PCA object.
-    return None, None
+
+    pca_OBj = PCA(n_components= 128,random_state = 42)
+    pca_OBj.fit(X_train)
+    new_XT = pca_OBj.fit_transform(X_train)
+    
+    print(pca_OBj.explained_variance_ratio_)
+
+    
+
+    return new_XT, pca_OBj
 
 
 def train_nn(X_train: np.ndarray, y_train: np.ndarray) -> MLPClassifier:
@@ -36,11 +45,29 @@ def train_nn(X_train: np.ndarray, y_train: np.ndarray) -> MLPClassifier:
 
     X_train, X_val, y_train, y_val = train_test_split(X_train, y_train,
                                                       test_size=0.2, random_state=42)
-
+    
+    hidden_layers = [(2,),(8,),(64,),(256,),(1024,),(128,256,128)]
+    hl_list = ['(2,)','(8,)','(64,)','(256,)','(1024,)','(128,256,128)']
+    for i in range(len(hidden_layers)):
+        mlp_c =MLPClassifier(max_iter=100,solver="adam",random_state=1,hidden_layer_sizes= [i])
+        print("Validation Scores for layer size"+hl_list[i])
+        #print(mlp_c.validation_scores_(mlp_c))
+        print(mlp_c.loss_curve_)
+    #mlp_c8 = MLPClassifier(X_train,y_train,max_iter=100,solver="adam",random_state=1,hidden_layer_sizes=(8,))
+    #mlp_c64 = MLPClassifier(X_train,y_train,max_iter=100,solver="adam",random_state=1,hidden_layer_sizes=(64,))
+    #mlp_c256 = MLPClassifier(X_train,y_train,max_iter=100,solver="adam",random_state=1,hidden_layer_sizes=(256,))
+    #mlp_c1024 = MLPClassifier(X_train,y_train,max_iter=100,solver="adam",random_state=1,hidden_layer_sizes=(1024,))
+    #mlp_cLast = MLPClassifier(X_train,max_iter=100,solver="adam",random_state=1,hidden_layer_sizes=(128,256,128))
+    
+    
+    #mlp_Best = MLPClassifier(X_train,max_iter=100,solver="adam",random_state=1,hidden_layer_sizes=TODO )
+    mlp_Best = None
+    
     # TODO: Train MLPClassifier with different number of layers/neurons.
+
     #       Print the train accuracy, validation accuracy, and the training loss for each configuration.
     #       Return the MLPClassifier that you consider to be the best.
-    return None
+    return mlp_Best
 
 
 def train_nn_with_regularization(X_train: np.ndarray, y_train: np.ndarray) -> MLPClassifier:
@@ -56,8 +83,16 @@ def train_nn_with_regularization(X_train: np.ndarray, y_train: np.ndarray) -> ML
 
     # TODO: Use the code from the `train_nn` function, but add regularization to the MLPClassifier.
     #       Again, return the MLPClassifier that you consider to be the best.
-
-    return None
+    hidden_layers = [(2,),(8,),(64,),(256,),(1024,),(128,256,128)]
+    for i in range(len(hidden_layers)):
+        mlp_cReg = MLPClassifier(X_train,y_train,max_iter=100,solver="adam",random_state=1,hidden_layer_sizes=[i],
+                                alpha=0.1,early_stopping= True)
+        print(mlp_cReg.validation_scores_)
+        print(mlp_cReg.loss_curve_)
+    # mlp_cRegBest = MLPClassifier(X_train,y_train,max_iter=100,solver="adam",random_state=1,hidden_layer_sizes= #TODO],
+    #                         alpha=0.1,early_stopping= True)
+    mlp_cRegBest = None
+    return mlp_cRegBest
 
 
 def plot_training_loss_curve(nn: MLPClassifier) -> None:

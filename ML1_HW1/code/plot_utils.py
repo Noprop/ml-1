@@ -26,6 +26,20 @@ def plot_scatterplot_and_polynomial(x: np.ndarray,
     # You should plot both a scatter plot of the data points and the polynomial that you have computed.
     # Feel free to use `compute_polynomial_design_matrix`.
     pass
+    plt.figure()
+    plt.scatter(x, y, color='blue', label='Data points')
+
+    x_line = np.linspace(np.min(x), np.max(x), 300)
+    degree = len(theta) - 1
+    X_poly = compute_polynomial_design_matrix(x_line, degree)
+    y_line = X_poly @ theta
+
+    plt.plot(x_line, y_line, color='red', label=f'Polynomial Degree {degree}')
+
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.title(title)
+    plt.legend()
 
     plt.savefig(f'plots/{figname}.pdf')
     plt.show()
@@ -213,6 +227,11 @@ def plot_function_over_iterations(f_list: np.ndarray,
     # You should plot the function value over iterations.
     # Do not forget to label the plot (xlabel, ylabel, title)
     pass
+
+    plt.plot(f_list, marker='o')
+    plt.title("Function over iterations")
+    plt.xlabel("# of iterations")
+    plt.tight_layout()
 
     plt.savefig(f'plots/{figname}.pdf')
     plt.show()

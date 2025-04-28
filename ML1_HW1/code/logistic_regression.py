@@ -8,7 +8,9 @@ def create_design_matrix_dataset_1(X_data: np.ndarray) -> np.ndarray:
     :return: Design matrix X
     """
     # TODO: Create the design matrix X for dataset 1
-    X = None
+    x1 = X_data[:, 0]
+    x2 = X_data[:, 1]
+    X = np.column_stack((x1, x2, x1-x2, x1**2, x2**2))
 
     assert X.shape[0] == X_data.shape[0], """The number of rows in the design matrix X should be the same as
                                              the number of data points."""
@@ -24,6 +26,9 @@ def create_design_matrix_dataset_2(X_data: np.ndarray) -> np.ndarray:
     """
     # TODO: Create the design matrix X for dataset 2
     X = None
+    x1 = X_data[:, 0]
+    x2 = X_data[:, 1]
+    X = np.column_stack((x1, x2, x1**2, x2**2))
 
     assert X.shape[0] == X_data.shape[0], """The number of rows in the design matrix X should be the same as
                                              the number of data points."""
@@ -39,6 +44,9 @@ def create_design_matrix_dataset_3(X_data: np.ndarray) -> np.ndarray:
     """
     # TODO: Create the design matrix X for dataset 3
     X = None
+    x1 = X_data[:, 0]
+    x2 = X_data[:, 1]
+    X = np.column_stack((x1, x2, x1**3, x2**3))
 
     assert X.shape[0] == X_data.shape[0], """The number of rows in the design matrix X should be the same as
                                              the number of data points."""

@@ -41,7 +41,7 @@ def task_1(use_linalg_formulation=False):
     # good corr #1
     average_pulse = smartwatch_data[:, 2]
     max_pulse = smartwatch_data[:, 3]
-    X = np.column_stack([np.ones(len(average_pulse)), average_pulse])
+    X = np.column_stack([np.ones(len(average_pulse)), average_pulse]) # lol, multiple ways to create a design matrix
     b, w = fit_univariate_lin_model(average_pulse, max_pulse) if not use_linalg_formulation else fit_multiple_lin_model(X, max_pulse)
     plot_scatterplot_and_line(average_pulse, max_pulse, (b, w), "Average Pulse", "Max Pulse", "Average vs Max Pulse")
     pcc = calculate_pearson_correlation(average_pulse, max_pulse)
@@ -136,14 +136,39 @@ def task_1(use_linalg_formulation=False):
     # For the feature-target pair of choice, compute the polynomial design matrix with an appropriate degree K, 
     # fit the model, and plot the data points together with the polynomial function.
     # Report the MSE and the theta vector.
-    pass
+    average_pulse = smartwatch_data[:, 2]
+    max_pulse = smartwatch_data[:, 3]
 
+    X_poly = compute_polynomial_design_matrix(average_pulse, 10)
+    theta_poly = np.linalg.lstsq(X_poly, max_pulse, rcond=None)[0]
+    y_pred = X_poly.dot(theta_poly)
+    mse = np.mean((max_pulse - y_pred) ** 2)
+    print("\nPolynomial Regression (Task 1.3.2):")
+    print(f"Feature: Hours Sleep vs Target: Average Pulse")
+    print(f"Theta: {theta_poly}")
+    print(f"MSE: {mse:.2f}")
+
+    plot_scatterplot_and_polynomial(average_pulse, max_pulse, theta_poly, 10, "Average Pulse", "Max Pulse",    
+                                    "Average Pulse vs Max Pulse")
 
     # TODO: Implement Task 1.3.3: Use x_small and y_small to fit a polynomial model.
     # Find and report the smallest K that gets zero loss. Plot the data points and the polynomial function.
     x_small = smartwatch_data[:5, column_to_id['duration']]
     y_small = smartwatch_data[:5, column_to_id['calories']]
-    pass
+
+    X_poly_small = compute_polynomial_design_matrix(x_small, 4)
+    theta_poly_small = np.linalg.lstsq(X_poly_small, y_small, rcond=None)[0]
+    y_pred_small = X_poly_small.dot(theta_poly_small)
+    mse_small = np.mean((y_small - y_pred_small) ** 2)
+
+    print("\nPolynomial Regression (Task 1.3.3):")
+    print(f"Using the small dataset (first 5 samples of 'duration' vs 'calories'):")
+    print(f"Smallest polynomial degree that achieves zero loss: {4}")
+    print(f"Theta: {theta_poly_small}")
+    print(f"MSE: {mse_small:.2e}")
+    plot_scatterplot_and_polynomial(x_small, y_small, theta_poly_small, 4,
+                                    "Duration", "Calories",
+                                    "Polynomial Regression on small dataset: Duration vs Calories")
 
 
 def task_2():
@@ -152,19 +177,19 @@ def task_2():
     for task in [1, 2, 3]:
         print(f'---- Logistic regression task {task} ----')
         if task == 1:
-            # TODO: Load the data set 1 (X-1-data.npy and targets-dataset-1.npy)
-            X_data = None # TODO: change me
-            y = None # TODO: change me
+            # Load the data set 1 (X-1-data.npy and targets-dataset-1.npy)
+            X_data = np.load("./data/X-1-data.npy")
+            y = np.load("./data/targets-dataset-1.npy")
             create_design_matrix = create_design_matrix_dataset_1
         elif task == 2:
-            # TODO: Load the data set 2 (X-1-data.npy and targets-dataset-2.npy)
-            X_data = None # TODO: change me
-            y = None # TODO: change me
+            # Load the data set 2 (X-1-data.npy and targets-dataset-2.npy)
+            X_data = np.load("./data/X-1-data.npy")
+            y = np.load("./data/targets-dataset-2.npy")
             create_design_matrix = create_design_matrix_dataset_2
         elif task == 3:
             # Load the data set 3 (X-2-data.npy and targets-dataset-3.npy)
-            X_data = None # TODO: change me
-            y = None # TODO: change me
+            X_data = np.load("./data/X-2-data.npy")
+            y = np.load("./data/targets-dataset-3.npy")
             create_design_matrix = create_design_matrix_dataset_3
         else:
             raise ValueError('Task not found.')
@@ -174,41 +199,44 @@ def task_2():
         # Plot the datapoints (just for visual inspection)
         plot_datapoints(X, y, f'Targets - Task {task}')
 
-        # TODO: Split the dataset using the `train_test_split` function.
+        # 2.2
+        # Split the dataset using the `train_test_split` function.
         # The parameter `random_state` should be set to 0.
-        X_train, X_test, y_train, y_test = None, None, None, None
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
         print(f'Shapes of: X_train {X_train.shape}, X_test {X_test.shape}, y_train {y_train.shape}, y_test {y_test.shape}')
 
+        # 2.3
         # Train the classifier
         custom_params = logistic_regression_params_sklearn()
         clf = LogisticRegression(**custom_params)
-        # TODO: Fit the model to the data using the `fit` method of the classifier `clf`
-        acc_train, acc_test = None, None # TODO: Use the `score` method of the classifier `clf` to calculate accuracy
+        # Fit the model to the data using the `fit` method of the classifier `clf`
+        clf.fit(X_train, y_train)
+        acc_train, acc_test = clf.score(X_train, y_train), clf.score(X_test, y_test)
 
         print(f'Train accuracy: {acc_train * 100:.2f}%. Test accuracy: {100 * acc_test:.2f}%.')
         
-        yhat_train = None # TODO: Use the `predict_proba` method of the classifier `clf` to
-                          #  calculate the predicted probabilities on the training set
-        yhat_test = None # TODO: Use the `predict_proba` method of the classifier `clf` to
-                         #  calculate the predicted probabilities on the test set
+        yhat_train = clf.predict_proba(X_train)[:, 1]
+        yhat_test  = clf.predict_proba(X_test)[:, 1]
 
-        # TODO: Use the `log_loss` function to calculate the cross-entropy loss
+        #  Use the `log_loss` function to calculate the cross-entropy loss
         #  (once on the training set, once on the test set).
         #  You need to pass (1) the true binary labels and (2) the probability of the *positive* class to `log_loss`.
         #  Since the output of `predict_proba` is of shape (n_samples, n_classes), you need to select the probabilities
         #  of the positive class by indexing the second column (index 1).
-        loss_train, loss_test = None, None
-        print(f'Train loss: {loss_train}. Test loss: {loss_test}.')
+        loss_train = log_loss(y_train, yhat_train)
+        loss_test  = log_loss(y_test, yhat_test)
+
+        print(f'Train loss: {loss_train:.2f}. Test loss: {loss_test:.2f}.')
 
         plot_logistic_regression(clf, create_design_matrix, X_train, f'(Dataset {task}) Train set predictions',
                                  figname=f'logreg_train{task}')
         plot_logistic_regression(clf, create_design_matrix, X_test,  f'(Dataset {task}) Test set predictions',
                                  figname=f'logreg_test{task}')
 
-        # TODO: Print theta vector (and also the bias term). Hint: Check the attributes of the classifier
-        classifier_weights, classifier_bias = None, None
+        classifier_weights = clf.coef_[0]
+        classifier_bias = clf.intercept_[0]
 
-        print(f'Parameters: {classifier_weights}, {classifier_bias}')
+        print(f'Parameters: {classifier_weights.round(2)}, {classifier_bias:.2f}')
 
 
 def task_3(initial_plot=True):
@@ -239,7 +267,8 @@ def task_3(initial_plot=True):
     #  i.e., learning_rate, lr_decay, and num_iters. Try out lr_decay=1 as well as values for lr_decay that are < 1.
     x_list, y_list, f_list = None, None, None
     lr = 0.02
-    lr_decay = 0.99
+    # lr_decay = 0.99
+    lr_decay = 1
     num_iters = 200
     x_list, y_list, f_list = gradient_descent(rastrigin, gradient_rastrigin, x0, y0, lr, lr_decay, num_iters)
 
@@ -252,8 +281,9 @@ def task_3(initial_plot=True):
                     x_list=x_list, y_list=y_list)
 
     # TODO: Create a plot f(x_t, y_t) over iterations t by calling `plot_function_over_iterations` with `f_list`
-    
-    
+    print(f_list)
+    plot_function_over_iterations(f_list)
+
     pass
 
 
@@ -261,7 +291,7 @@ def main():
     np.random.seed(46)
     # print("test")
 
-    #task_1(use_linalg_formulation=False)
+    # task_1(use_linalg_formulation=False)
     # task_2()
     task_3(initial_plot=True)
 

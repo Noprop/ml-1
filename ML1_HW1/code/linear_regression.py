@@ -96,7 +96,13 @@ def compute_polynomial_design_matrix(x: np.ndarray, K: int) -> np.ndarray:
     :param K: the degree of the polynomial
     :return: 2D array that represents the design matrix. Think about the shape of the output.
     """
+    # Implement the polynomial design matrix (Task 1.3.2)
+    N = x.shape[0]
 
-    # TODO: Implement the polynomial design matrix (Task 1.3.2)
-    polynomial_design_matrix = None
-    return polynomial_design_matrix
+    design_matrix = np.empty((N, K + 1))
+    design_matrix[:, 0] = 1  # bias term
+
+    for col in range(1, K + 1):
+      design_matrix[:, col] = x ** col
+
+    return design_matrix

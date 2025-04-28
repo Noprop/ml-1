@@ -23,14 +23,12 @@ def reduce_dimension(X_train: np.ndarray, n_components: int) -> Tuple[np.ndarray
     #       Print the explained variance ratio of the PCA object.
     #       Return both the transformed data and the PCA object.
 
-    pca_OBj = PCA(n_components= 128,random_state = 42)
+    pca_OBj = PCA(n_components=128, random_state=42)
     pca_OBj.fit(X_train)
     new_XT = pca_OBj.fit_transform(X_train)
-    
-    print(pca_OBj.explained_variance_ratio_)
 
-    
-
+    # probably the amount of variance preserved: ?
+    print(sum(pca_OBj.explained_variance_ratio_))
     return new_XT, pca_OBj
 
 
@@ -42,32 +40,30 @@ def train_nn(X_train: np.ndarray, y_train: np.ndarray) -> MLPClassifier:
     :param y_train: Targets
     :return: The MLPClassifier you consider to be the best
     """
+    # TODO: Train MLPClassifier with different number of layers/neurons.
+    # Print the train accuracy, validation accuracy, and the training loss for each configuration.
+    # Return the MLPClassifier that you consider to be the best.
 
     X_train, X_val, y_train, y_val = train_test_split(X_train, y_train,
                                                       test_size=0.2, random_state=42)
-    
-    hidden_layers = [(2,),(8,),(64,),(256,),(1024,),(128,256,128)]
-    hl_list = ['(2,)','(8,)','(64,)','(256,)','(1024,)','(128,256,128)']
-    for i in range(len(hidden_layers)):
-        mlp_c =MLPClassifier(max_iter=100,solver="adam",random_state=1,hidden_layer_sizes= [i])
-        print("Validation Scores for layer size"+hl_list[i])
-        #print(mlp_c.validation_scores_(mlp_c))
-        print(mlp_c.loss_curve_)
-    #mlp_c8 = MLPClassifier(X_train,y_train,max_iter=100,solver="adam",random_state=1,hidden_layer_sizes=(8,))
-    #mlp_c64 = MLPClassifier(X_train,y_train,max_iter=100,solver="adam",random_state=1,hidden_layer_sizes=(64,))
-    #mlp_c256 = MLPClassifier(X_train,y_train,max_iter=100,solver="adam",random_state=1,hidden_layer_sizes=(256,))
-    #mlp_c1024 = MLPClassifier(X_train,y_train,max_iter=100,solver="adam",random_state=1,hidden_layer_sizes=(1024,))
-    #mlp_cLast = MLPClassifier(X_train,max_iter=100,solver="adam",random_state=1,hidden_layer_sizes=(128,256,128))
-    
-    
-    #mlp_Best = MLPClassifier(X_train,max_iter=100,solver="adam",random_state=1,hidden_layer_sizes=TODO )
-    mlp_Best = None
-    
-    # TODO: Train MLPClassifier with different number of layers/neurons.
+    mlp_best = None
+    mlp_best_loss = float('inf')
 
-    #       Print the train accuracy, validation accuracy, and the training loss for each configuration.
-    #       Return the MLPClassifier that you consider to be the best.
-    return mlp_Best
+    hidden_layers = [(2,),(8,),(64,),(256,),(1024,),(128,256,128)]
+    for i in range(len(hidden_layers)):
+      mlp_c = MLPClassifier(max_iter=100, solver="adam", random_state=1, hidden_layer_sizes=hidden_layers[i])
+      mlp_c.fit(X_train, y_train)
+
+      print("Validation Scores for layer size", hidden_layers[i])
+      print("Best Loss: ", mlp_c.best_loss_)
+      print("Training accuracy:", mlp_c.score(X_train, y_train))
+      print("Test set accuracy:", mlp_c.score(X_val, y_val))
+      print()
+      if (mlp_c.best_loss_ < mlp_best_loss):
+        mlp_best = mlp_c
+        mlp_best_loss = mlp_c.best_loss_
+
+    return mlp_best
 
 
 def train_nn_with_regularization(X_train: np.ndarray, y_train: np.ndarray) -> MLPClassifier:
@@ -78,22 +74,36 @@ def train_nn_with_regularization(X_train: np.ndarray, y_train: np.ndarray) -> ML
     :param y_train: Targets
     :return: The MLPClassifier you consider to be the best
     """
+    # TODO: Use the code from the `train_nn` function, but add regularization to the MLPClassifier.
+    # Again, return the MLPClassifier that you consider to be the best.
+
     X_train, X_val, y_train, y_val = train_test_split(X_train, y_train,
                                                       test_size=0.2, random_state=42)
+    mlp_best = None
+    mlp_best_loss = float('inf')
 
-    # TODO: Use the code from the `train_nn` function, but add regularization to the MLPClassifier.
-    #       Again, return the MLPClassifier that you consider to be the best.
     hidden_layers = [(2,),(8,),(64,),(256,),(1024,),(128,256,128)]
     for i in range(len(hidden_layers)):
-        mlp_cReg = MLPClassifier(X_train,y_train,max_iter=100,solver="adam",random_state=1,hidden_layer_sizes=[i],
-                                alpha=0.1,early_stopping= True)
-        print(mlp_cReg.validation_scores_)
-        print(mlp_cReg.loss_curve_)
-    # mlp_cRegBest = MLPClassifier(X_train,y_train,max_iter=100,solver="adam",random_state=1,hidden_layer_sizes= #TODO],
-    #                         alpha=0.1,early_stopping= True)
-    mlp_cRegBest = None
-    return mlp_cRegBest
+      mlp_c = MLPClassifier(alpha=0.1, max_iter=100, solver="adam", random_state=1, hidden_layer_sizes=hidden_layers[i])
+      mlp_c.fit(X_train, y_train)
 
+      print("Validation Scores for layer size", hidden_layers[i])
+      print("Best Loss: ", mlp_c.best_loss_)
+      print("Training accuracy:", mlp_c.score(X_train, y_train))
+      print("Test set accuracy:", mlp_c.score(X_val, y_val))
+      print()
+      if (mlp_c.best_loss_ < mlp_best_loss):
+        mlp_best = mlp_c
+        mlp_best_loss = mlp_c.best_loss_
+
+    plt.figure(figsize=(10, 6))
+    plt.plot(mlp_best.loss_curve_, 'r', alpha=0.5, label='Loss')
+    plt.title('Classifier Loss')
+    plt.xlabel('Loss Iteration')
+    plt.ylabel('Loss')
+    plt.show()
+
+    return mlp_best
 
 def plot_training_loss_curve(nn: MLPClassifier) -> None:
     """
@@ -130,5 +140,14 @@ def perform_grid_search(X_train: np.ndarray, y_train: np.ndarray) -> MLPClassifi
     #       Run the grid search with `cv=5` and (optionally) `verbose=4`.
     #       Print the best score (mean cross validation score) and the best parameter set.
     #       Return the best estimator found by GridSearchCV.
+
+    params = {
+      'alpha': [0.0, 0.1, 1.0],
+      'batch_size': [32, 512],
+      'hidden_layer_sizes': [(128), (256)],
+    }
+
+    classifier = MLPClassifier(max_iter=100, solver='adam', random_state=42)
+    grid = GridSearchCV()
 
     return None

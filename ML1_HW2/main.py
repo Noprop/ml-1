@@ -19,29 +19,29 @@ def task_1():
     # Task 1.1.1
     print("----- Task 1.1.1 -----")
     X_train_pca, pca = reduce_dimension(X_train, n_components=128)
-    print(X_train_pca.shape)
+    print("Variance preserved: ", sum(pca.explained_variance_ratio_))
 
     # Task 1.1.2
     print("----- Task 1.1.2 -----")
     best_nn = train_nn(X_train_pca, y_train)
 
-    # # Task 1.1.3 needs no code, only explanations in the report
+    # Task 1.1.3 needs no code, only explanations in the report
 
-    # # Task 1.1.4
+    # Task 1.1.4
     print("----- Task 1.1.4 -----")
     best_reg_nn = train_nn_with_regularization(X_train_pca, y_train)
 
-    # best_model_task_1_1 = None # TODO: Choose the best model from the previous Tasks
-    # plot_training_loss_curve(best_model_task_1_1)
+    best_model_task_1_1 = best_reg_nn
+    plot_training_loss_curve(best_model_task_1_1)
 
-    # # Task 1.2   
-    # print("----- Task 1.2 -----")
-    # best_gs_nn = perform_grid_search(X_train_pca, y_train)
+    # Task 1.2   
+    print("----- Task 1.2 -----")
+    best_gs_nn = perform_grid_search(X_train_pca, y_train)
 
-    # final_model = None # TODO: Choose the best model from *all* previous Tasks
+    final_model = best_gs_nn
 
-    # X_test_pca = pca.transform(X_test)
-    # show_confusion_matrix_and_classification_report(final_model, X_test_pca, y_test)
+    X_test_pca = pca.transform(X_test)
+    show_confusion_matrix_and_classification_report(final_model, X_test_pca, y_test)
 
 
 def task_2():

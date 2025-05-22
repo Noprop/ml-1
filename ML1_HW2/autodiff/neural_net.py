@@ -67,7 +67,7 @@ class FeedForwardLayer(Module):
         # raise NotImplementedError('Task 2.2 not implemented')
         self.neurons: List[Neuron] = []
         for _ in range(num_outputs):
-            self.neurons.append(Neuron(num_inputs, use_relu))
+          self.neurons.append(Neuron(num_inputs, use_relu))
 
     def __call__(self, x: List[Scalar]) -> List[Scalar]:
         """
@@ -78,7 +78,7 @@ class FeedForwardLayer(Module):
         # raise NotImplementedError('Task 2.2 not implemented')
         out = []
         for i in range(len(self.neurons)):
-            out.append(self.neurons[i](x))
+          out.append(self.neurons[i](x))
         return out
 
     def parameters(self):
@@ -99,10 +99,11 @@ class MultiLayerPerceptron(Module):
         """
         # TODO: `self.layers` should be a List of FeedForwardLayer objects.
         self.layers: List[FeedForwardLayer] = []
-        self.layers.append(FeedForwardLayer(num_inputs, num_hidden[0]))
-        for i in range(1, len(num_hidden)-1):
-          self.layers.append(FeedForwardLayer(num_hidden[i-1], num_hidden[i]))
-        self.layers.append(FeedForwardLayer(num_hidden[-1], num_outputs))
+        self.layers.append(FeedForwardLayer(num_inputs=num_inputs, num_outputs=num_hidden[0], use_relu=True))
+        for i in range(len(num_hidden)-1):
+          self.layers.append(FeedForwardLayer(num_inputs=num_hidden[i], num_outputs=num_hidden[i+1], use_relu=True))
+        self.layers.append(FeedForwardLayer(num_inputs=num_hidden[-1], num_outputs=num_outputs, use_relu=False))
+
 
     def __call__(self, x: List[Scalar]) -> List[Scalar]:
         """

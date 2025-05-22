@@ -16,6 +16,13 @@ def train_nn_own(X_train: np.ndarray, y_train: np.ndarray) -> MLPClassifierOwn:
     # TODO: Create a MLPClassifierOwn object and fit it using (X_train, y_train)
     #       Print the train accuracy and validation accuracy
     #       Return the trained model
-    MLPClassifierOwn(5, 0, 32, (16), 42)
 
-    return None
+    # mlp = MLPClassifierOwn(num_epochs=5, alpha=0, hidden_layer_sizes=[16], random_state=42)
+    # mlp = MLPClassifierOwn(num_epochs=5, alpha=0.1, hidden_layer_sizes=[16], random_state=42)
+    mlp = MLPClassifierOwn(num_epochs=5, alpha=0.1, hidden_layer_sizes=[16], random_state=42)
+    mlp.fit(X_train, y_train)
+
+    print("Train accuracy: ", mlp.score(X_train, y_train))
+    print("Validation accuracy: ", mlp.score(X_val, y_val))
+
+    return mlp

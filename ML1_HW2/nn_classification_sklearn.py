@@ -23,7 +23,7 @@ def reduce_dimension(X_train: np.ndarray, n_components: int) -> Tuple[np.ndarray
     #       Print the explained variance ratio of the PCA object.
     #       Return both the transformed data and the PCA object.
 
-    pca_OBj = PCA(n_components=128, random_state=42)
+    pca_OBj = PCA(n_components=n_components, random_state=42)
     pca_OBj.fit(X_train)
     new_XT = pca_OBj.fit_transform(X_train)
 

@@ -23,8 +23,9 @@ class MLPClassifierOwn():
         :param z: List of Scalar values
         """
         # raise NotImplementedError('Task 2.4: Softmax not implemented.')
-        tot = sum(z)
-        return [item/tot for item in z]
+        exps = [xi.exp() for xi in z]
+        sum_exps = sum(exps)
+        return [e/sum_exps for e in exps]
 
     @staticmethod
     def sigmoid(z: Scalar) -> Scalar:
@@ -33,8 +34,8 @@ class MLPClassifierOwn():
 
         :param z: Scalar
         """
-        raise NotImplementedError('Task 3.1: Sigmoid not implemented.')
-        return None
+        # raise NotImplementedError('Task 3.1: Sigmoid not implemented.')
+        return 1/(1+(-z).exp())
 
     @staticmethod
     def multiclass_cross_entropy_loss(y_true: int, probs: List[Scalar]) -> Scalar:
@@ -55,8 +56,8 @@ class MLPClassifierOwn():
         :param y_true: 0 or 1
         :param prob: Scalar between 0 and 1, representing the probability of the positive class
         """
-        raise NotImplementedError('Task 3.1: Binary cross-entropy loss not implemented.')
-        return None
+        # raise NotImplementedError('Task 3.1: Binary cross-entropy loss not implemented.')
+        return -(y_true * prob.log() + (1 - y_true) * (1-prob).log())
 
     def l2_regularization_term(self) -> Scalar:
         """
@@ -65,8 +66,11 @@ class MLPClassifierOwn():
         Compute the sum of squared model parameters and weigh this term by alpha/2 * (1 / batch_size).
         Ensure that you return a Scalar object since we need to backpropagate through this term.
         """
-        raise NotImplementedError('Task 2.6: L2 Regularization not implemented.')
-        return None
+        # raise NotImplementedError('Task 2.6: L2 Regularization not implemented.')
+        param_sum = Scalar(0)
+        for p in self.model.parameters():
+          param_sum += (p*p)
+        return param_sum * (self.alpha / (2 * self.batch_size))
 
     def sgd_step(self, learning_rate: float) -> None:
         """
@@ -85,12 +89,12 @@ class MLPClassifierOwn():
         """
         self.num_classes = len(set(y))
         assert self.num_classes > 1, 'Number of classes must be greater than 1'
-        if self.num_classes == 2:
-            nn_num_outputs = 1
-            raise NotImplementedError('Task 3 (Binary classification) is not implemented. '
-                                      'Thus, number of classes must be greater than 2 (multi-class classification)')
-        else:
-            nn_num_outputs = self.num_classes
+        # if self.num_classes == 2:
+        #     nn_num_outputs = 1
+        #     raise NotImplementedError('Task 3 (Binary classification) is not implemented. '
+        #                               'Thus, number of classes must be greater than 2 (multi-class classification)')
+        # else:
+        nn_num_outputs = self.num_classes
 
         random.seed(self.random_state)
         np.random.seed(self.random_state)
